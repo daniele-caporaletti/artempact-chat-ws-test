@@ -3,6 +3,7 @@ import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 
 let stompClient = null;
+const WS_ENDPOINT = process.env.REACT_APP_WS_ENDPOINT || '/chat/v0/ws';
 
 export default function ChatTest() {
   const [connected, setConnected] = useState(false);
@@ -14,14 +15,13 @@ export default function ChatTest() {
   const clientRef = useRef(null);
 
   const connect = () => {
-    const socket = new SockJS('/chat/v0/ws');
+    const socket = new SockJS(WS_ENDPOINT);
     const client = new Client({
       webSocketFactory: () => socket,
       onConnect: () => {
         console.log('🟢 Connesso al WebSocket');
         setConnected(true);
 
-        // Ricezione messaggi broadcast
         client.subscribe('/topic/messages', (message) => {
           const msg = JSON.parse(message.body);
           console.log('📥 Messaggio ricevuto su /topic/messages:', msg);
