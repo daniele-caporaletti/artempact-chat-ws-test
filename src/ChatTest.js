@@ -103,6 +103,10 @@ export default function ChatTest() {
 
   return (
     <div style={{ padding: '20px' }}>
+      <div style={{ background: '#f5f5f5', padding: '10px', marginBottom: '15px', border: '1px solid #ccc' }}>
+        <strong>🔌 WebSocket Endpoint:</strong> {WS_ENDPOINT}
+      </div>
+
       <h1>Chat WebSocket Test</h1>
 
       <div style={{ marginBottom: '10px' }}>
@@ -144,11 +148,14 @@ export default function ChatTest() {
         <h3>📋 Conversazione paginata (ultimi 20 messaggi):</h3>
         {conversation?.content?.length > 0 ? (
           conversation.content.map((msg, idx) => (
-            <div key={idx}>
-              <strong>{msg.senderId}:</strong> {msg.content}
-              <button onClick={() => markAsReceived(msg.id)} style={{ marginLeft: '10px' }}>
-                Mark as Received
-              </button>
+            <div key={idx} style={{ marginBottom: '5px' }}>
+              <strong>{msg.senderId}:</strong> {msg.content} {' '}
+              <span style={{ fontSize: '0.85em', color: '#555' }}>({msg.status})</span>
+              {msg.status !== 'RECEIVED' && msg.receiverId === senderId && (
+                <button onClick={() => markAsReceived(msg.id)} style={{ marginLeft: '10px' }}>
+                  Mark as Received
+                </button>
+              )}
             </div>
           ))
         ) : (
@@ -161,7 +168,8 @@ export default function ChatTest() {
         {messages.length > 0 ? (
           messages.map((msg, idx) => (
             <div key={idx}>
-              <strong>{msg.senderId}:</strong> {msg.content}
+              <strong>{msg.senderId}:</strong> {msg.content} {' '}
+              <span style={{ fontSize: '0.85em', color: '#555' }}>({msg.status})</span>
             </div>
           ))
         ) : (
